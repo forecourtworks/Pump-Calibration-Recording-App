@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>FORECOURT WORKS | Flow Meter Calibration Certificate</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  <style>
+    :root {
+      --navy: #0d478c;
+      --navy-dark: #0a3568;
+      --accent: #c45c0a;
+      --success: #1a7346;
+      --danger: #b91c1c;
+      --bg: #eef2f7;
+      --card: #fff;
+      --border: #d0d7e2;
+      --text: #0f172a;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding-bottom: 80px;
+    }
+    .app-header {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      color: #fff;
+      padding: 14px 18px 16px;
+      box-shadow: 0 4px 14px rgba(13,71,140,0.25);
+    }
+    .app-header-top {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .brand-row { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+    .app-logo {
+      height: 40px;
+      max-width: 180px;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 6px;
+      padding: 4px 8px;
+    }
+    .company-name { font-size: 1.05rem; font-weight: 800; }
+    .company-details { font-size: 0.75rem; opacity: 0.92; margin-top: 3px; line-height: 1.35; }
+    .tagline {
+      font-style: italic;
+      color: #ffc107;
+      font-size: 0.88rem;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+    .doc-badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.72rem;
+      text-align: right;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card h2 {
+      font-size: 0.95rem;
+      color: var(--navy);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .form-group { margin-bottom: 10px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(13,71,140,0.12);
+    }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    @media (max-width: 700px) {
+      .row-2, .row-3 { grid-template-columns: 1fr; }
+    }
+    .help { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+    .req { color: var(--danger); }
+
+    .meter-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fafbfc;
+    }
+    .verdict-box {
+      margin-top: 8px;
+      padding: 10px;
+      border: 2px solid #94a3b8;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 0.82rem;
+    }
+    .verdict-box .pass { color: var(--success); font-weight: 800; font-family: Arial, sans-serif; font-size: 12pt; }
+    .verdict-box .fail { color: var(--danger); font-weight: 800; font-family: Arial, sans-serif; font-size: 12pt; }
+    .formula-note { font-size: 0.72rem; color: var(--muted); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 11px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-outline { background: #fff; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .photo-thumb {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #f3f4f6;
+    }
+    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-thumb .remove {
+      position: absolute; top: 3px; right: 3px;
+      background: var(--danger); color: #fff; border: none;
+      width: 20px; height: 20px; border-radius: 50%; font-size: 11px; cursor: pointer;
+    }
+
+    .sig-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 700px) { .sig-row { grid-template-columns: 1fr; } }
+    .sig-unified {
+      position: relative;
+      border: 1.5px dashed #94a3b8;
+      border-radius: 8px;
+      background: #fff;
+      height: 90px;
+      overflow: hidden;
+    }
+    .sig-unified canvas { width: 100% !important; height: 90px !important; display: block; touch-action: none; }
+    .sig-unified .sig-file-overlay {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: contain; background: #fff; display: none; z-index: 2;
+    }
+    .sig-unified.has-file .sig-file-overlay { display: block; }
+    .sig-unified.has-file canvas { visibility: hidden; }
+    .sig-actions-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; align-items: center; }
+
+    .stage-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .stage-chip {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      background: #fff;
+      user-select: none;
+    }
+    .stage-chip.on { border-color: var(--navy); background: #e8f1fb; color: var(--navy); }
+
+    .toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: #0f172a; color: #fff; padding: 11px 16px; border-radius: 8px;
+      font-size: 0.86rem; z-index: 200; display: none; max-width: 92%;
+    }
+    .toast.show { display: block; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+
+    footer.app-foot {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header-top">
+      <div class="brand-row">
+        <img src="forecourt-logo-banner.png" alt="FORECOURT-SWL" class="app-logo" />
+        <div>
+          <div class="company-name">FORECOURT WORKS LIMITED</div>
+          <div class="company-details">
+            Ramco Court, GT 3B, South C, Nairobi<br/>
+            Phone: +(254) 729-002-087 &nbsp;|&nbsp; Email: sales@forecourtworks.co.ke<br/>
+            www.forecourtworks.co.ke
+          </div>
+          <div class="tagline">Engineering Reliability Into Every Forecourt</div>
+        </div>
+      </div>
+      <div class="doc-badge">
+        <div><b>FLOW METER CALIBRATION</b></div>
+        <div>Checklist No: INSP/FDU&amp;Pumps/ControlledDoc/Vol-01</div>
+        <div id="header-doc-no">Doc: —</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <h2>1. Document &amp; equipment metadata</h2>
+      <div class="row-3">
+        <div class="form-group">
+          <label>Calibration / Inspection No. <span class="req">*</span></label>
+          <input type="text" id="doc-number" />
+        </div>
+        <div class="form-group">
+          <label>Calibration date <span class="req">*</span></label>
+          <input type="date" id="doc-date" />
+          <div class="help" id="date-hint"></div>
+        </div>
+        <div class="form-group">
+          <label>Linked WO#</label>
+          <input type="text" id="linked-wo" class="auto-caps" placeholder="Optional" />
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label>Client name <span class="req">*</span></label>
+          <input type="text" id="client-name" class="auto-caps" required />
+        </div>
+        <div class="form-group">
+          <label>Site location <span class="req">*</span></label>
+          <input type="text" id="site-name" class="auto-caps" required />
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label>Site rep name &amp; contact</label>
+          <input type="text" id="site-rep" class="auto-caps" />
+        </div>
+        <div class="form-group">
+          <label>Unique asset ID</label>
+          <input type="text" id="lift-id" class="auto-caps" placeholder="Editable" />
+        </div>
+      </div>
+      <div class="row-3">
+        <div class="form-group">
+          <label>Equipment type</label>
+          <select id="equip-type">
+            <option value="SUCTION-FDU">SUCTION FDU</option>
+            <option value="REMOTE-FDU">REMOTE FDU</option>
+            <option value="STP">STP (related meter)</option>
+            <option value="OTHER">OTHER</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Equipment brand</label>
+          <input type="text" id="equipment-brand" class="auto-caps" />
+        </div>
+        <div class="form-group">
+          <label>Model No.</label>
+          <input type="text" id="equipment-model" class="auto-caps" />
+        </div>
+      </div>
+      <div class="row-3">
+        <div class="form-group">
+          <label>Serial No. <span class="req">*</span></label>
+          <input type="text" id="equipment-serial" class="auto-caps" />
+        </div>
+        <div class="form-group">
+          <label>Product / hose config</label>
+          <select id="hose-config">
+            <option value="">— SELECT —</option>
+            <option value="1P-1H">1P-1H</option>
+            <option value="1P:2H">1P:2H</option>
+            <option value="2P:2H">2P:2H</option>
+            <option value="2P:4H">2P:4H</option>
+            <option value="3P:6H">3P:6H</option>
+            <option value="N/A">N/A</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>County (for W&amp;M verdict text)</label>
+          <input type="text" id="county-name" class="auto-caps" placeholder="e.g. Nairobi City" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2. Calibration stage</h2>
+      <div class="stage-chips">
+        <div class="stage-chip on" data-stage="new">New / never used (Verification 0% to +0.25%)</div>
+        <div class="stage-chip" data-stage="inService">In-service (Re-verification −0.25% to +0.50%)</div>
+      </div>
+      <input type="hidden" id="cal-stage" value="new" />
+      <div class="help">Limits match Forecourt Works meter accuracy rules used on the full inspection checklist.</div>
+    </div>
+
+    <div class="card">
+      <h2>3. Meter accuracy readings</h2>
+      <div id="cal-rows"></div>
+      <div id="cal-summary"></div>
+      <div class="actions">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-add-reading">+ Add reading</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>4. Photos (optional)</h2>
+      <p class="help">No photos → PDF is 1 page. Up to 4 photos → page 2 (2×2). More than 4 → page 3 (next 4). Images are fitted portrait into quadrants.</p>
+      <div class="actions">
+        <label class="btn btn-outline btn-sm" style="cursor:pointer;">
+          📷 Add photos
+          <input type="file" id="photo-input" accept="image/*" multiple hidden />
+        </label>
+      </div>
+      <div class="photo-grid" id="photo-grid"></div>
+    </div>
+
+    <div class="card">
+      <h2>5. Sign-off</h2>
+      <div class="sig-row">
+        <div>
+          <div class="form-group">
+            <label>Tester / technician name <span class="req">*</span></label>
+            <input type="text" id="tester-name" class="auto-caps" />
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="tester-date" />
+          </div>
+          <label>Tester signature</label>
+          <div class="sig-unified" id="wrap-sig-tester">
+            <canvas id="sig-tester"></canvas>
+            <img id="sig-tester-preview" class="sig-file-overlay" alt="" />
+          </div>
+          <div class="sig-actions-row">
+            <button type="button" class="btn btn-outline btn-sm" data-clear-sig="sig-tester">Clear</button>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer;">📎 Attach
+              <input type="file" id="sig-tester-file" accept="image/*" hidden />
+            </label>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label>Client / site representative <span class="req">*</span></label>
+            <input type="text" id="client-rep-name" class="auto-caps" />
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="client-date" />
+          </div>
+          <label>Client signature</label>
+          <div class="sig-unified" id="wrap-sig-client">
+            <canvas id="sig-client"></canvas>
+            <img id="sig-client-preview" class="sig-file-overlay" alt="" />
+          </div>
+          <div class="sig-actions-row">
+            <button type="button" class="btn btn-outline btn-sm" data-clear-sig="sig-client">Clear</button>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer;">📎 Attach
+              <input type="file" id="sig-client-file" accept="image/*" hidden />
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-accent" id="btn-pdf">Generate Calibration PDF</button>
+    </div>
+    <footer class="app-foot">FORECOURT WORKS LIMITED · Flow meter calibration module · Controlled companion to FDU inspection checklist</footer>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
